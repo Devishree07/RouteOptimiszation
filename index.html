@@ -1,94 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Smart Geo Analysis Dashboard</title>
+  <title>Geo Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #1a1a2e; }
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+    #map { height: calc(100vh - 80px); width: 100%; }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: white;
-        }
+    #controls {
+      height: 80px;
+      background: #16213e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 0 20px;
+    }
 
-        header {
-            padding: 15px;
-            text-align: center;
-            background: #1e293b;
-            font-size: 22px;
-            font-weight: bold;
-        }
+    .layer-btn {
+      padding: 10px 20px;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      transition: all 0.2s;
+    }
 
-        #map {
-            height: 80vh;
-            width: 100%;
-        }
+    #btn-road    { background: #c0392b; }
+    #btn-ndvi    { background: #27ae60; }
+    #btn-node    { background: #2980b9; }
 
-        .features {
-            padding: 15px;
-            background: #111827;
-        }
-
-        .feature-box {
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 5px;
-            background: #2563eb;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .feature-box:hover {
-            background: #1d4ed8;
-        }
-    </style>
+    .layer-btn:hover  { opacity: 0.85; }
+    .layer-btn.active { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.4); }
+  </style>
 </head>
 
 <body>
 
-<header>
-    🌍 Geo Analysis Dashboard (QGIS Powered)
-</header>
+  <div id="map"></div>
 
-<div id="map"></div>
+  <div id="controls">
+    <button class="layer-btn" id="btn-road">🚗 Road Network Analysis</button>
+    <button class="layer-btn" id="btn-ndvi">🌿 NDVI Vegetation Analysis</button>
+    <button class="layer-btn" id="btn-node">📍 Node Mapping</button>
+  </div>
 
-<div class="features">
-    <h3>Features</h3>
-    <div class="feature-box">🚗 Road Network Analysis</div>
-    <div class="feature-box">🌱 NDVI Vegetation Analysis</div>
-    <div class="feature-box">📍 Node Mapping</div>
-</div>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-
-<script>
-    // Initialize map
+    // ── MAP SETUP ──────────────────────────────────────────────
     var map = L.map('map').setView([12.9835, 77.7427], 13);
 
-    // Base map
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: "© OpenStreetMap"
+      attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Example marker (you can replace with your data)
-    L.marker([12.9835, 77.7427]).addTo(map)
-        .bindPopup("Center Point")
-        .openPopup();
 
-    // You can load your GeoJSON here later
-    /*
-    fetch('data/roads.geojson')
-    .then(res => res.json())
-    .then(data => {
-        L.geoJSON(data).addTo(map);
+    // ── LAYER CONFIG — update filenames here if needed ─────────
+    const layerConfig = {
+      road: {
+        // whitefield_line files are your road/line layers
+        files: [
+          'data/whitefield_line.geojson——whitefield.geojson',
+          'data/whitefield_line2.geojson——whitefield.geojson',
+          'data/whitefield_line3.geojson——whitefield.geojson',
+          'data/whitefield_line4.geojson——whitefield.geojson',
+          'data/whitefield_line5.geojson——whitefield.geojson'
+        ],
+        style: { color: '#e74c3c', weight: 2.5, opacity: 0.9 }
+      },
+      ndvi: {
+        // whitefield polygon = vegetation/area layer
+        files: ['data/whitefield.geojson'],
+        style: { color: '#27ae60', weight: 1.5, fillColor: '#2ecc71', fillOpacity: 0.35 }
+      },
+      node: {
+        // loc1 = delivery/stop points, depot = depot point
+        files: [
+          'data/loc1.geojson',
+          'data/depot.geojson',
+          'data/deport_point.geojson'
+        ],
+        style: { color: '#2980b9', weight: 2 },
+        pointStyle: { radius: 6, fillColor: '#3498db', color: '#fff', weight: 1, fillOpacity: 0.9 }
+      }
+    };
+
+
+    // ── STATE ──────────────────────────────────────────────────
+    let activeGroup  = null;   // currently visible L.layerGroup
+    let activeKey    = null;   // 'road' | 'ndvi' | 'node'
+    const cache      = {};     // loaded layers stored here
+
+
+    // ── STRIP CRS (fixes QGIS export issue) ────────────────────
+    function cleanGeoJSON(data) {
+      delete data.crs;          // Leaflet doesn't support crs property
+      return data;
+    }
+
+
+    // ── LOAD ONE FILE → returns Promise<L.GeoJSON> ─────────────
+    function loadFile(key, url) {
+      return fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error(`Cannot load ${url}`);
+          return res.json();
+        })
+        .then(data => {
+          data = cleanGeoJSON(data);
+          const cfg = layerConfig[key];
+
+          return L.geoJSON(data, {
+            style: cfg.style,
+
+            // For point features (loc1, depot)
+            pointToLayer: function(feature, latlng) {
+              return L.circleMarker(latlng, cfg.pointStyle || {
+                radius: 6, fillColor: '#e74c3c',
+                color: '#fff', weight: 1, fillOpacity: 0.9
+              });
+            },
+
+            // Popup showing feature id if available
+            onEachFeature: function(feature, layer) {
+              if (feature.properties && feature.properties.id) {
+                layer.bindPopup('ID: ' + feature.properties.id);
+              }
+            }
+          });
+        });
+    }
+
+
+    // ── SWITCH LAYER ───────────────────────────────────────────
+    function switchLayer(key, btn) {
+
+      // Toggle off if same button clicked again
+      if (activeKey === key) {
+        if (activeGroup) map.removeLayer(activeGroup);
+        activeGroup = null;
+        activeKey   = null;
+        btn.classList.remove('active');
+        return;
+      }
+
+      // Remove previous layer
+      if (activeGroup) map.removeLayer(activeGroup);
+      document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Use cached layer group if already loaded
+      if (cache[key]) {
+        cache[key].addTo(map);
+        activeGroup = cache[key];
+        activeKey   = key;
+        return;
+      }
+
+      // Load all files for this key, group them
+      btn.textContent = '⏳ Loading...';
+
+      const promises = layerConfig[key].files.map(url => loadFile(key, url));
+
+      Promise.all(promises)
+        .then(layers => {
+          const group = L.layerGroup(layers);
+          cache[key]  = group;
+          group.addTo(map);
+          activeGroup = group;
+          activeKey   = key;
+
+          // Restore button label
+          const labels = {
+            road: '🚗 Road Network Analysis',
+            ndvi: '🌿 NDVI Vegetation Analysis',
+            node: '📍 Node Mapping'
+          };
+          btn.textContent = labels[key];
+        })
+        .catch(err => {
+          console.error(err);
+          btn.textContent = '❌ Load Failed';
+          setTimeout(() => {
+            const labels = {
+              road: '🚗 Road Network Analysis',
+              ndvi: '🌿 NDVI Vegetation Analysis',
+              node: '📍 Node Mapping'
+            };
+            btn.textContent = labels[key];
+          }, 2000);
+        });
+    }
+
+
+    // ── BIND BUTTONS ───────────────────────────────────────────
+    document.getElementById('btn-road').addEventListener('click', function() {
+      switchLayer('road', this);
     });
-    */
-</script>
+    document.getElementById('btn-ndvi').addEventListener('click', function() {
+      switchLayer('ndvi', this);
+    });
+    document.getElementById('btn-node').addEventListener('click', function() {
+      switchLayer('node', this);
+    });
 
+  </script>
 </body>
 </html>
