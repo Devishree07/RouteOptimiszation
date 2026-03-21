@@ -477,7 +477,7 @@ html,body{height:100%;font-family:Arial,sans-serif;overflow:hidden;background:#0
   function initUserMap(){
     if(userReady){ userMap.invalidateSize(); return; }
     userReady = true;
-
+    
     // locked to depot zone — user cannot pan outside
     userMap = L.map('user-map', {
       center: [12.9835, 77.7427],
