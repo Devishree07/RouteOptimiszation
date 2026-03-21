@@ -9,9 +9,6 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; font-family: Arial, sans-serif; overflow:hidden; }
 
-  /* ═══════════════════════════════════════
-     LOGIN SCREEN — YOUR EXACT STYLES
-  ═══════════════════════════════════════ */
   #login-screen {
     position: fixed; inset: 0; z-index: 9999;
     background: #0a0e1a;
@@ -104,6 +101,32 @@
   }
   .lf input:focus { border-color:rgba(255,255,255,0.3); }
   .lf input::placeholder { color:rgba(255,255,255,0.18); }
+
+  /* ── ERROR MESSAGE ── */
+  .lerror {
+    display:none;
+    margin: 0 22px 12px;
+    padding: 9px 12px;
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.4);
+    border-radius: 4px;
+    font-size: 12px;
+    color: #e74c3c;
+    text-align: center;
+    animation: shake 0.3s ease;
+  }
+  @keyframes shake {
+    0%,100%{ transform:translateX(0); }
+    25%    { transform:translateX(-6px); }
+    75%    { transform:translateX(6px); }
+  }
+
+  /* ── INPUT ERROR STATE ── */
+  .lf input.err {
+    border-color: rgba(192,57,43,0.6);
+    background: rgba(192,57,43,0.07);
+  }
+
   .lbtn {
     width:100%; padding:11px; margin-top:4px; border:none; border-radius:3px;
     font-family:Arial,sans-serif; font-size:13px; font-weight:700;
@@ -129,7 +152,6 @@
   }
   .lflabel { font-size:11px; font-weight:700; color:rgba(255,255,255,0.2); text-transform:uppercase; letter-spacing:0.5px; margin-right:4px; }
   .lmbtn { padding:9px 18px; border:none; border-radius:3px; font-family:Arial,sans-serif; font-size:13px; font-weight:700; color:#fff; cursor:default; display:flex; align-items:center; gap:7px; opacity:0.55; }
-  .lm-red   { background:#c0392b; }
   .lm-green { background:#27ae60; }
   .lm-blue  { background:#2980b9; }
   @keyframes glow {
@@ -137,14 +159,9 @@
     to   { box-shadow: 0 0 16px rgba(39,174,96,0.9), 0 0 28px rgba(39,174,96,0.4); }
   }
 
-  /* ═══════════════════════════════════════
-     SHARED NAV — both screens
-  ═══════════════════════════════════════ */
-  #map-screen, #user-screen {
-    display: none; flex-direction: column; height: 100vh;
-  }
+  /* SHARED NAV */
+  #map-screen, #user-screen { display: none; flex-direction: column; height: 100vh; }
   #map-screen.visible, #user-screen.visible { display: flex; }
-
   #map-nav {
     height: 50px; flex-shrink:0; background: #16213e;
     border-bottom:1px solid rgba(255,255,255,0.08);
@@ -162,9 +179,7 @@
   }
   .mn-logout:hover { color:#fff; border-color:rgba(255,255,255,0.3); }
 
-  /* ═══════════════════════════════════════
-     DEPOT MAP — YOUR EXACT STYLES
-  ═══════════════════════════════════════ */
+  /* DEPOT MAP */
   #map { flex:1; width:100%; }
   #controls {
     height: 72px; flex-shrink:0; background: #16213e;
@@ -175,9 +190,8 @@
     cursor: pointer; font-size: 13px; font-weight: bold; color: white;
     transition: all 0.2s; opacity: 0.75;
   }
-  #btn-road  { background: #c0392b; }
-  #btn-ndvi  { background: #27ae60; }
-  #btn-node  { background: #2980b9; }
+  #btn-ndvi { background: #27ae60; }
+  #btn-node { background: #2980b9; }
   .layer-btn.active {
     opacity: 1; border-color: #ffffff;
     box-shadow: 0 0 14px rgba(255,255,255,0.45); transform: scale(1.05);
@@ -187,9 +201,7 @@
     to   { box-shadow: 0 0 18px rgba(39,174,96,0.9), 0 0 32px rgba(39,174,96,0.4); }
   }
 
-  /* ═══════════════════════════════════════
-     USER SCREEN — restricted zone view
-  ═══════════════════════════════════════ */
+  /* USER SCREEN */
   #user-body { display:flex; flex:1; overflow:hidden; }
   #user-map-wrap { flex:1; position:relative; }
   #user-map { width:100%; height:100%; }
@@ -229,7 +241,7 @@
 </head>
 <body>
 
-<!-- ═══ LOGIN SCREEN — YOUR EXACT HTML ═══ -->
+<!-- ═══ LOGIN SCREEN ═══ -->
 <div id="login-screen">
   <div id="login-bg">
     <div class="bg-road br1"></div>
@@ -273,6 +285,8 @@
           <label>Your Zone / Area</label>
           <div class="liw"><span>📍</span><input type="text" id="u-zone" placeholder="e.g. Whitefield Zone A"/></div>
         </div>
+        <!-- error box sits just above button -->
+        <div class="lerror" id="u-error">⚠️ Please fill in all fields</div>
         <button class="lbtn lbtn-red" onclick="doLogin('user')">🚛 Track My Vehicle</button>
       </div>
 
@@ -292,6 +306,8 @@
           <label>Password</label>
           <div class="liw"><span>🔒</span><input type="password" id="d-pass" placeholder="Enter depot password"/></div>
         </div>
+        <!-- error box sits just above button -->
+        <div class="lerror" id="d-error">⚠️ Please fill in all fields</div>
         <button class="lbtn lbtn-blue" onclick="doLogin('depot')">🏭 Open Depot Dashboard</button>
       </div>
 
@@ -303,7 +319,6 @@
     </div>
   </div>
 
-  <!-- YOUR EXACT BOTTOM BAR -->
   <div id="l-bottombar">
     <span class="lflabel">Features</span>
     <div class="lmbtn lm-green">🌿 Area Covered</div>
@@ -315,7 +330,7 @@
 </div>
 
 
-<!-- ═══ DEPOT MAP SCREEN — YOUR EXACT BUTTONS ═══ -->
+<!-- ═══ DEPOT MAP SCREEN ═══ -->
 <div id="map-screen">
   <div id="map-nav">
     <span class="mn-brand">♻️ WasteTrack</span>
@@ -324,10 +339,7 @@
     <span class="mn-user" id="depot-name"></span>
     <button class="mn-logout" onclick="doLogout()">← Logout</button>
   </div>
-
   <div id="map"></div>
-
-  <!-- YOUR EXACT CONTROLS -->
   <div id="controls">
     <button class="layer-btn" id="btn-ndvi">🌿 Green Zone Analysis</button>
     <button class="layer-btn" id="btn-node">📍 Node Mapping</button>
@@ -338,7 +350,7 @@
 </div>
 
 
-<!-- ═══ USER TRACKING SCREEN — NEW ═══ -->
+<!-- ═══ USER TRACKING SCREEN ═══ -->
 <div id="user-screen">
   <div id="map-nav">
     <span class="mn-brand">♻️ WasteTrack</span>
@@ -348,13 +360,10 @@
     <button class="mn-logout" onclick="doLogout()">← Logout</button>
   </div>
   <div id="user-body">
-    <!-- locked map: depot zone only, no controls -->
     <div id="user-map-wrap">
       <div id="user-map"></div>
     </div>
-    <!-- tracking sidebar -->
     <div id="user-sidebar">
-
       <div class="us-sec">
         <div class="us-lbl">⏱ Next Pickup ETA</div>
         <div class="us-eta">
@@ -363,7 +372,6 @@
           <div class="eta-sub">🚛 WF-VH-04 &nbsp;·&nbsp; 1.4 km away</div>
         </div>
       </div>
-
       <div class="us-sec">
         <div class="us-lbl">🚛 Assigned Vehicle</div>
         <div class="us-veh">
@@ -382,7 +390,6 @@
           </div>
         </div>
       </div>
-
       <div class="us-sec">
         <div class="us-lbl">📅 Today's Schedule</div>
         <div class="sched">
@@ -393,13 +400,11 @@
           <div class="stop"><div class="dot d-wait"></div><div class="stop-nm">Channasandra</div><div class="stop-t">~10:30</div></div>
         </div>
       </div>
-
       <div class="us-sec">
         <div class="us-lbl">🔔 Alerts</div>
         <div class="ualert a-warn">⚠️ Vehicle 12 min late — traffic on ITPL Road</div>
         <div class="ualert a-info">ℹ️ Next: Tomorrow 8:00 AM (dry waste)</div>
       </div>
-
     </div>
   </div>
 </div>
@@ -414,24 +419,86 @@
     ['tu','td'].forEach(function(id){ document.getElementById(id).classList.remove('on'); });
     document.getElementById(role === 'user' ? 'pu' : 'pd').classList.add('on');
     document.getElementById(role === 'user' ? 'tu' : 'td').classList.add('on');
+    // clear errors on tab switch
+    document.getElementById('u-error').style.display = 'none';
+    document.getElementById('d-error').style.display = 'none';
+    clearErr(['u-email','u-pass','u-zone','d-id','d-pass']);
   }
 
-  // ── LOGIN — routes to different screen per role ────────────
+  // ── HELPERS ────────────────────────────────────────────────
+  function clearErr(ids) {
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('err');
+    });
+  }
+
+  function markErr(id) {
+    document.getElementById(id).classList.add('err');
+  }
+
+  function showError(errId, msg) {
+    var el = document.getElementById(errId);
+    el.textContent = '⚠️ ' + msg;
+    el.style.display = 'block';
+    // re-trigger animation
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = 'shake 0.3s ease';
+  }
+
+  // ── LOGIN WITH VALIDATION ──────────────────────────────────
   function doLogin(role) {
-    var name = role === 'user'
-      ? (document.getElementById('u-email').value || 'Resident')
-      : (document.getElementById('d-id').value   || 'Depot Staff');
 
-    document.getElementById('login-screen').style.display = 'none';
+    if (role === 'user') {
+      var email = document.getElementById('u-email').value.trim();
+      var pass  = document.getElementById('u-pass').value.trim();
+      var zone  = document.getElementById('u-zone').value.trim();
 
-    if (role === 'depot') {
-      document.getElementById('depot-name').textContent = '👤 ' + name;
-      document.getElementById('map-screen').classList.add('visible');
-      setTimeout(function(){ initDepotMap(); }, 50);
-    } else {
-      document.getElementById('user-name').textContent = '👤 ' + name;
+      // clear previous errors
+      clearErr(['u-email','u-pass','u-zone']);
+      document.getElementById('u-error').style.display = 'none';
+
+      // validate
+      var errors = [];
+      if (!email) { markErr('u-email'); errors.push('mobile/email'); }
+      if (!pass)  { markErr('u-pass');  errors.push('password'); }
+      if (!zone)  { markErr('u-zone');  errors.push('zone'); }
+
+      if (errors.length > 0) {
+        showError('u-error', 'Please fill in: ' + errors.join(', '));
+        return; // STOP — do not proceed
+      }
+
+      // all good — proceed
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('user-name').textContent = '👤 ' + email;
       document.getElementById('user-screen').classList.add('visible');
       setTimeout(function(){ initUserMap(); }, 50);
+
+    } else {
+      var staffId = document.getElementById('d-id').value.trim();
+      var dpass   = document.getElementById('d-pass').value.trim();
+
+      // clear previous errors
+      clearErr(['d-id','d-pass']);
+      document.getElementById('d-error').style.display = 'none';
+
+      // validate
+      var derrors = [];
+      if (!staffId) { markErr('d-id');   derrors.push('depot/staff ID'); }
+      if (!dpass)   { markErr('d-pass'); derrors.push('password'); }
+
+      if (derrors.length > 0) {
+        showError('d-error', 'Please fill in: ' + derrors.join(', '));
+        return; // STOP — do not proceed
+      }
+
+      // all good — proceed
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('depot-name').textContent = '👤 ' + staffId;
+      document.getElementById('map-screen').classList.add('visible');
+      setTimeout(function(){ initDepotMap(); }, 50);
     }
   }
 
@@ -440,10 +507,18 @@
     document.getElementById('map-screen').classList.remove('visible');
     document.getElementById('user-screen').classList.remove('visible');
     document.getElementById('login-screen').style.display = 'flex';
+    // clear all fields and errors on logout
+    ['u-email','u-pass','u-zone','d-id','d-pass'].forEach(function(id){
+      var el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('err');
+    });
+    document.getElementById('u-error').style.display = 'none';
+    document.getElementById('d-error').style.display = 'none';
   }
 
   // ══════════════════════════════════════════════════════════
-  // DEPOT MAP — full access, your exact layer logic
+  // DEPOT MAP
   // ══════════════════════════════════════════════════════════
   var depotReady = false;
 
@@ -497,7 +572,6 @@
         .catch(function(e){ console.warn('⚠️ Skipped:', e.message); });
     }
 
-    // YOUR EXACT FILE LOADING
     ['data/whitefield_line.geojson','data/whitefield_line2.geojson',
      'data/whitefield_line3.geojson','data/whitefield_line4.geojson',
      'data/whitefield_line5.geojson'].forEach(function(f){ loadIntoGroup(f,'road'); });
@@ -507,7 +581,6 @@
     ['data/loc1.geojson','data/depot.geojson',
      'data/deport_point.geojson'].forEach(function(f){ loadIntoGroup(f,'node'); });
 
-    // YOUR EXACT BUTTON LOGIC
     var activeKey = null;
 
     function setHighlight(key, on) {
@@ -534,7 +607,6 @@
       activeKey = key;
     }
 
-    // YOUR EXACT BUTTONS (ndvi + node only, no road btn)
     document.getElementById('btn-ndvi').onclick = function(){ handleBtn('ndvi',this); };
     document.getElementById('btn-node').onclick = function(){ handleBtn('node',this); };
 
@@ -542,8 +614,7 @@
   }
 
   // ══════════════════════════════════════════════════════════
-  // USER MAP — restricted to depot zone only
-  // no layer controls, shows route + vehicle + stops only
+  // USER MAP
   // ══════════════════════════════════════════════════════════
   var userReady = false;
   var DEPOT_BOUNDS = [[12.975, 77.730],[13.010, 77.780]];
@@ -554,18 +625,15 @@
 
     var userMap = L.map('user-map', {
       center: [12.9835, 77.7427],
-      zoom: 14,
-      minZoom: 13,
-      maxZoom: 17,
+      zoom: 14, minZoom: 13, maxZoom: 17,
       maxBounds: DEPOT_BOUNDS,
-      maxBoundsViscosity: 1.0  // hard lock — cannot drag outside depot zone
+      maxBoundsViscosity: 1.0
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
       attribution: '© OpenStreetMap', maxZoom:17
     }).addTo(userMap);
 
-    // shade everything OUTSIDE the depot zone
     var world = [[-90,-180],[-90,180],[90,180],[90,-180]];
     var hole  = [
       [DEPOT_BOUNDS[0][0], DEPOT_BOUNDS[0][1]],
@@ -577,7 +645,6 @@
       color:'none', fillColor:'#0a0e1a', fillOpacity:0.65, interactive:false
     }).addTo(userMap);
 
-    // depot marker
     L.marker([12.9835, 77.7427],{
       icon: L.divIcon({
         className:'',
@@ -586,14 +653,12 @@
       })
     }).bindPopup('<b>WF Main Depot</b><br>Whitefield').addTo(userMap);
 
-    // vehicle route
     var route = [
       [12.9990,77.7180],[12.9960,77.7250],[12.9930,77.7300],
       [12.9900,77.7350],[12.9860,77.7400],[12.9840,77.7430]
     ];
     L.polyline(route,{color:'#e74c3c',weight:4,opacity:0.8,dashArray:'8,4'}).addTo(userMap);
 
-    // stops
     var stops = [
       {pos:[12.9990,77.7180], name:'Kadugodi Stop',       done:true},
       {pos:[12.9930,77.7300], name:'Pattanduru Agrahara', done:true},
@@ -608,12 +673,10 @@
        .addTo(userMap);
     });
 
-    // user location
     L.circleMarker([12.9840,77.7430],{
       radius:11,fillColor:'#2980b9',color:'#fff',weight:3,fillOpacity:0.9
     }).bindPopup('<b>📍 Your Location</b>').addTo(userMap);
 
-    // animated vehicle
     var vehIdx = 0;
     var vehMarker = L.marker(route[0],{
       icon: L.divIcon({
