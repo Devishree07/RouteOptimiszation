@@ -192,9 +192,9 @@
 
 <!-- STAT STRIP -->
 <div id="stat-strip">
-  <div class="ss-item"><span class="ss-lbl">🟢 Low Density</span><span class="ss-val green">1,380 px</span></div>
-  <div class="ss-item"><span class="ss-lbl">🟠 Medium Density</span><span class="ss-val amber">168,466 px</span></div>
-  <div class="ss-item"><span class="ss-lbl">🔴 High Density</span><span class="ss-val red">288,301 px</span></div>
+  <div class="ss-item"><span class="ss-lbl">🟢 Low Density</span><span class="ss-val green">1,380 kg</span></div>
+  <div class="ss-item"><span class="ss-lbl">🟠 Medium Density</span><span class="ss-val amber">168,466 </span></div>
+  <div class="ss-item"><span class="ss-lbl">🔴 High Density</span><span class="ss-val red">288,301 </span></div>
   <div class="ss-item"><span class="ss-lbl">Coverage</span><span class="ss-val green">Whitefield</span></div>
 </div>
 
@@ -211,9 +211,9 @@
     <div id="map"></div>
     <div id="legend">
       <div class="leg-title">Collection Density</div>
-      <div class="leg-row"><div class="leg-box" style="background:#27ae60;"></div>Low — 1 collection / 2 days</div>
-      <div class="leg-row"><div class="leg-box" style="background:#e67e22;"></div>Medium — 1 collection / day</div>
-      <div class="leg-row"><div class="leg-box" style="background:#e74c3c;"></div>High — 2 collections / day</div>
+      <div class="leg-row"><div class="leg-box" style="background:#27ae60;"></div>Low — 1 collection / week</div>
+      <div class="leg-row"><div class="leg-box" style="background:#e67e22;"></div>Medium — 3 collection / week</div>
+      <div class="leg-row"><div class="leg-box" style="background:#e74c3c;"></div>High — 1 collection / day</div>
       <div class="leg-row"><div class="leg-box" style="background:#facc15;border-radius:50%;"></div>Dump Yard</div>
     </div>
   </div>
@@ -228,17 +228,17 @@
     <div class="density-cards">
       <div class="dcard dcard-1 sel" id="card-1" onclick="filterDensity(1)">
         <div class="dc-swatch" style="background:#27ae60;"></div>
-        <div class="dc-info"><div class="dc-name">Low Density</div><div class="dc-freq">1 collection / 2 days</div></div>
+        <div class="dc-info"><div class="dc-name">Low Density</div><div class="dc-freq">1 collection / week</div></div>
         <div class="dc-count green">12</div>
       </div>
       <div class="dcard dcard-2" id="card-2" onclick="filterDensity(2)">
         <div class="dc-swatch" style="background:#e67e22;"></div>
-        <div class="dc-info"><div class="dc-name">Medium Density</div><div class="dc-freq">1 collection / day</div></div>
+        <div class="dc-info"><div class="dc-name">Medium Density</div><div class="dc-freq">3 collections / week</div></div>
         <div class="dc-count amber">13</div>
       </div>
       <div class="dcard dcard-3" id="card-3" onclick="filterDensity(3)">
         <div class="dc-swatch" style="background:#e74c3c;"></div>
-        <div class="dc-info"><div class="dc-name">High Density</div><div class="dc-freq">2 collections / day</div></div>
+        <div class="dc-info"><div class="dc-name">High Density</div><div class="dc-freq">1 collection / day</div></div>
         <div class="dc-count red">13</div>
       </div>
     </div>
