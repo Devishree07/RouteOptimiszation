@@ -9,16 +9,12 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; font-family: Arial, sans-serif; overflow:hidden; }
 
-  /* ═══════════════════════════════════════
-     LOGIN SCREEN
-  ═══════════════════════════════════════ */
   #login-screen {
     position: fixed; inset: 0; z-index: 9999;
     background: #0a0e1a;
     display: flex; flex-direction: column;
   }
 
-  /* animated map-like background */
   #login-bg {
     position: absolute; inset: 0;
     background-color: #1a2332;
@@ -48,9 +44,7 @@
       radial-gradient(ellipse 140px 90px  at 55% 75%, rgba(33,150,243,0.10) 0%, transparent 70%),
       radial-gradient(ellipse 100px 60px  at 70% 20%, rgba(33,150,243,0.08) 0%, transparent 70%);
   }
-  .bg-road {
-    position:absolute; background:rgba(255,200,80,0.13);
-  }
+  .bg-road { position:absolute; background:rgba(255,200,80,0.13); }
   .br1 { width:4px; height:200%; top:-50%; left:33%; transform:rotate(22deg); }
   .br2 { width:3px; height:200%; top:-50%; left:62%; transform:rotate(-14deg); }
   .br3 { width:100%; height:3px; top:42%; }
@@ -65,7 +59,6 @@
     );
   }
 
-  /* top bar */
   #l-topbar {
     position:relative; z-index:2;
     height:50px; flex-shrink:0;
@@ -81,14 +74,12 @@
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
   .l-live  { font-size:11px; color:#4caf50; font-weight:600; }
 
-  /* center */
   #l-center {
     position:relative; z-index:2;
     flex:1; display:flex; align-items:center; justify-content:center;
     padding:16px;
   }
 
-  /* card */
   .lcard {
     width:100%; max-width:410px;
     background:rgba(10,14,26,0.92);
@@ -110,7 +101,6 @@
   .lc-title { font-size:14px; font-weight:700; }
   .lc-sub   { font-size:11px; color:rgba(255,255,255,0.33); margin-top:3px; }
 
-  /* tabs */
   .ltabs { display:flex; border-bottom:1px solid rgba(255,255,255,0.07); }
   .ltab {
     flex:1; padding:11px 8px;
@@ -124,11 +114,9 @@
   #tu.on { color:#fff; background:rgba(192,57,43,0.2);  border-bottom-color:#c0392b; }
   #td.on { color:#fff; background:rgba(41,128,185,0.2); border-bottom-color:#2980b9; }
 
-  /* panels */
   .lpanel { display:none; padding:20px 22px; }
   .lpanel.on { display:block; }
 
-  /* field */
   .lf { margin-bottom:13px; }
   .lf label { display:block; font-size:10px; font-weight:700; letter-spacing:0.7px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:5px; }
   .liw { position:relative; }
@@ -142,7 +130,6 @@
   .lf input:focus { border-color:rgba(255,255,255,0.3); }
   .lf input::placeholder { color:rgba(255,255,255,0.18); }
 
-  /* login button */
   .lbtn {
     width:100%; padding:11px; margin-top:4px;
     border:none; border-radius:3px;
@@ -156,7 +143,6 @@
   .lbtn-red  { background:#c0392b; }
   .lbtn-blue { background:#2980b9; }
 
-  /* depot stats */
   .lstats { display:flex; gap:7px; margin-bottom:14px; }
   .lstat  { flex:1; text-align:center; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:3px; padding:7px 4px; }
   .lsv { font-size:17px; font-weight:700; color:#2980b9; }
@@ -166,34 +152,14 @@
   .lfoot a { font-size:11px; color:rgba(255,255,255,0.27); text-decoration:none; }
   .lfoot a:hover { color:rgba(255,255,255,0.6); }
 
-  /* bottom bar — matches your map */
-  #l-bottombar {
-    position:relative; z-index:2;
-    height:62px; flex-shrink:0;
-    background:#0c1120;
-    border-top:1px solid rgba(255,255,255,0.07);
-    display:flex; align-items:center; justify-content:center;
-    gap:10px; padding:0 20px;
-  }
-  .lflabel { font-size:11px; font-weight:700; color:rgba(255,255,255,0.2); text-transform:uppercase; letter-spacing:0.5px; margin-right:4px; }
-  .lmbtn { padding:9px 18px; border:none; border-radius:3px; font-family:Arial,sans-serif; font-size:13px; font-weight:700; color:#fff; cursor:default; display:flex; align-items:center; gap:7px; opacity:0.55; }
-  .lm-red   { background:#c0392b; }
-  .lm-green { background:#27ae60; }
-  .lm-blue  { background:#2980b9; }
-
-  /* ═══════════════════════════════════════
-     MAP SCREEN (hidden until login)
-  ═══════════════════════════════════════ */
   #map-screen {
     display: none;
     flex-direction: column;
     height: 100vh;
+    overflow: hidden;
   }
-  #map-screen.visible {
-    display: flex;
-  }
+  #map-screen.visible { display: flex; }
 
-  /* top nav bar on map */
   #map-nav {
     height: 50px; flex-shrink:0;
     background: #16213e;
@@ -213,34 +179,29 @@
   }
   .mn-logout:hover { color:#fff; border-color:rgba(255,255,255,0.3); }
 
-  #map { flex:1; width:100%; }
+  #map { flex:1; width:100%; min-height:0; }
 
-  /* bottom controls — your exact style */
-  #controls {
-    height: 72px; flex-shrink:0;
-    background: #16213e;
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px;
+  #l-bottombar {
+    height:62px; flex-shrink:0;
+    background:#0c1120;
+    border-top:1px solid rgba(255,255,255,0.07);
+    display:flex; align-items:center; justify-content:center;
+    gap:10px; padding:0 20px;
   }
-  .layer-btn {
-    padding: 10px 22px;
-    border: 3px solid transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px; font-weight: bold;
-    color: white;
-    transition: all 0.2s;
-    opacity: 0.75;
+  .lflabel { font-size:11px; font-weight:700; color:rgba(255,255,255,0.2); text-transform:uppercase; letter-spacing:0.5px; margin-right:4px; }
+  .lmbtn {
+    padding:9px 18px; border:none; border-radius:3px;
+    font-family:Arial,sans-serif; font-size:13px; font-weight:700;
+    color:#fff; cursor:pointer;
+    display:flex; align-items:center; gap:7px;
+    transition:filter 0.18s, transform 0.12s;
   }
-  #btn-road  { background: #c0392b; }
-  #btn-ndvi  { background: #27ae60; }
-  #btn-node  { background: #2980b9; }
-  .layer-btn.active {
-    opacity: 1;
-    border-color: #ffffff;
-    box-shadow: 0 0 14px rgba(255,255,255,0.45);
-    transform: scale(1.05);
-  }
+  .lmbtn:hover  { filter:brightness(1.15); }
+  .lmbtn:active { transform:scale(0.97); }
+  .lmbtn.active { outline:2px solid #fff; outline-offset:2px; }
+  .lm-red   { background:#c0392b; }
+  .lm-green { background:#27ae60; }
+  .lm-blue  { background:#2980b9; }
 </style>
 </head>
 <body>
@@ -325,12 +286,10 @@
     </div>
   </div>
 
-  
-
 </div><!-- /login-screen -->
 
 
-<!-- ═══ MAP SCREEN ═══ -->
+<!-- ═══ MAP SCREEN (depot only) ═══ -->
 <div id="map-screen">
 
   <div id="map-nav">
@@ -342,16 +301,16 @@
   </div>
 
   <div id="map"></div>
-<div id="l-bottombar">
+
+  <div id="l-bottombar">
     <span class="lflabel">Features</span>
-    <div class="lmbtn lm-green">🌿 Area Covered</div>
-    <div class="lmbtn lm-blue">📍 Node Mapping</div>
-    <a href="wf.html" style="text-decoration:none;"><div class="lmbtn" style="background:#1e8449;opacity:1;cursor:pointer;box-shadow:0 0 10px rgba(39,174,96,0.5);animation:glow 2s infinite alternate;">🌿 Green Zone Skip Route Optimizer</div></a>
-    <a href="cutter.html" style="text-decoration:none;"><div class="lmbtn" style="background:#0f2a1f;opacity:1;cursor:pointer;border:1px solid rgba(39,174,96,0.5);box-shadow:0 0 10px rgba(39,174,96,0.35);animation:glow 2s infinite alternate 0.5s;">✂️ Dead-Mileage Cutter</div></a>
-    <a href="density.html" style="text-decoration:none;"><div class="lmbtn" style="background:#1a0f2a;opacity:1;cursor:pointer;border:1px solid rgba(155,89,182,0.5);box-shadow:0 0 10px rgba(155,89,182,0.4);animation:glow 2s infinite alternate 1s;">📊 Density-wise Collection</div></a>
-    <a href="market.html" style="text-decoration:none;"><div class="lmbtn" style="background:#0f2a1f;opacity:1;cursor:pointer;border:1px solid rgba(39,174,96,0.5);box-shadow:0 0 10px rgba(39,174,96,0.35);animation:glow 2s infinite alternate 0.5s;">🛒 Market Day Surge Mapper</div></a>
+    <button id="btn-ndvi" class="lmbtn lm-green layer-btn">🌿 Area Covered</button>
+    <button id="btn-node" class="lmbtn lm-blue layer-btn">📍 Node Mapping</button>
+    <a href="wf.html" style="text-decoration:none;"><div class="lmbtn" style="background:#1e8449;cursor:pointer;box-shadow:0 0 10px rgba(39,174,96,0.5);">🌿 Green Zone Skip Route Optimizer</div></a>
+    <a href="cutter.html" style="text-decoration:none;"><div class="lmbtn" style="background:#0f2a1f;cursor:pointer;border:1px solid rgba(39,174,96,0.5);box-shadow:0 0 10px rgba(39,174,96,0.35);">✂️ Dead-Mileage Cutter</div></a>
+    <a href="density.html" style="text-decoration:none;"><div class="lmbtn" style="background:#1a0f2a;cursor:pointer;border:1px solid rgba(155,89,182,0.5);box-shadow:0 0 10px rgba(155,89,182,0.4);">📊 Density-wise Collection</div></a>
+    <a href="market.html" style="text-decoration:none;"><div class="lmbtn" style="background:#0f2a1f;cursor:pointer;border:1px solid rgba(39,174,96,0.5);box-shadow:0 0 10px rgba(39,174,96,0.35);">🛒 Market Day Surge Mapper</div></a>
   </div>
-  
 
 </div><!-- /map-screen -->
 
@@ -359,7 +318,6 @@
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
 
-  // ── TAB SWITCH ─────────────────────────────────────────────
   function swTab(role) {
     ['pu','pd'].forEach(id => document.getElementById(id).classList.remove('on'));
     ['tu','td'].forEach(id => document.getElementById(id).classList.remove('on'));
@@ -367,32 +325,27 @@
     document.getElementById(role === 'user' ? 'tu' : 'td').classList.add('on');
   }
 
-  // ── LOGIN ──────────────────────────────────────────────────
   function doLogin(role) {
-    // grab whatever was typed (no real auth — just show the map)
-    var name = role === 'user'
-      ? (document.getElementById('u-email').value || 'Resident')
-      : (document.getElementById('d-id').value   || 'Depot Staff');
+    if (role === 'user') {
+      // ── USER → go to user dashboard page ──
+      window.location.href = 'user-dashboard.html';
+      return;
+    }
 
-    // update nav bar
+    // ── DEPOT → show map screen inline ──
+    var name = document.getElementById('d-id').value || 'Depot Staff';
     document.getElementById('nav-user').textContent = '👤 ' + name;
-    document.getElementById('nav-role').textContent = role === 'user' ? '🚛 User' : '🏭 Depot';
-
-    // hide login, show map
+    document.getElementById('nav-role').textContent = '🏭 Depot';
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('map-screen').classList.add('visible');
-
-    // init map AFTER it's visible (fixes Leaflet sizing bug)
     initMap();
   }
 
-  // ── LOGOUT ─────────────────────────────────────────────────
   function doLogout() {
     document.getElementById('map-screen').classList.remove('visible');
     document.getElementById('login-screen').style.display = 'flex';
   }
 
-  // ── MAP INIT ───────────────────────────────────────────────
   var mapReady = false;
 
   function initMap() {
@@ -405,7 +358,6 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // layer groups
     var groups = {
       road: L.layerGroup().addTo(map),
       ndvi: L.layerGroup().addTo(map),
@@ -443,12 +395,10 @@
             }
           });
           groups[key].addLayer(layer);
-          console.log('✅ Loaded:', url);
         })
         .catch(e => console.error('❌', e.message));
     }
 
-    // load your actual files
     ['data/whitefield_line.geojson','data/whitefield_line2.geojson',
      'data/whitefield_line3.geojson','data/whitefield_line4.geojson',
      'data/whitefield_line5.geojson'].forEach(f => loadIntoGroup(f,'road'));
@@ -458,7 +408,6 @@
     ['data/loc1.geojson','data/depot.geojson',
      'data/deport_point.geojson'].forEach(f => loadIntoGroup(f,'node'));
 
-    // button highlight logic
     var activeKey = null;
 
     function setHighlight(key, on) {
@@ -485,11 +434,9 @@
       activeKey = key;
     }
 
-   
     document.getElementById('btn-ndvi').onclick = function(){ handleBtn('ndvi',this); };
     document.getElementById('btn-node').onclick = function(){ handleBtn('node',this); };
 
-    // fix map size after being shown
     setTimeout(function(){ map.invalidateSize(); }, 100);
   }
 
